@@ -1,0 +1,68 @@
+# ==========================================
+# 1. ARTEFACTOS DE DATA SCIENCE & MACHINE LEARNING (¡CRÍTICO!)
+# ==========================================
+*.pkl
+*.pickle
+*.joblib
+*.h5
+*.pb
+*.onnx
+*.npy
+*.npz
+models/
+.feast/
+data/
+*.csv
+*.xlsx
+*.parquet
+
+# ==========================================
+# 2. SEGURIDAD, LLAVES Y ARCHIVOS DE ENTRADA (.ENV)
+# ==========================================
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.secret
+*.kube
+config/secrets/
+credentials.json
+
+# ==========================================
+# 3. ENTORNOS VIRTUALES Y DEPENDENCIAS DE PYTHON
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.toast
+.build_environments/
+
+# ==========================================
+# 4. CONFIGURACIONES DE EDITORES DE CÓDIGO (IDE)
+# ==========================================
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+.DS_Store
+
+# ==========================================
+# 5. LOGS, CACHÉ Y MONITOREO
+# ==========================================
+*.log
+logs/
+.pytest_cache/
+.coverage
+htmlcov/
+.pydantic-cache/
+.apisix_cache/
