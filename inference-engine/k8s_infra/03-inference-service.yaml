@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: inference-engine-service
+  namespace: datascience-production
+  labels:
+    app.kubernetes.io/name: inference-engine
+    app.kubernetes.io/component: ingress-networking
+    app.kubernetes.io/part-of: datascience-platform
+spec:
+  type: ClusterIP             # Usamos ClusterIP para enrutamiento DNS interno puro de alta frecuencia
+  selector:
+    app: inference-engine-core # Mapeo exacto contra los Pods Running
+  ports:
+    - name: http-async-traffic
+      port: 9000               # Puerto del DNS interno en Kubernetes
+      targetPort: 9000         # Puerto real de Granian dentro del contenedor
+      protocol: TCP

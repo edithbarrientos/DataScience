@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: model-uploader-pod
+  namespace: datascience-production
+spec:
+  containers:
+  - name: tools
+    image: alpine
+    command: ["sh", "-c", "sleep 3600"]
+    volumeMounts:
+    - mountPath: /mnt/models
+      name: model-mesh-volume
+  volumes:
+  - name: model-mesh-volume
+    persistentVolumeClaim:
+      claimName: datascience-model-mesh-pvc

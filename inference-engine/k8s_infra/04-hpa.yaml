@@ -1,0 +1,23 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: inference-engine-hpa
+  namespace: datascience-production
+  labels:
+    app.kubernetes.io/name: inference-engine
+    app.kubernetes.io/component: elastic-scaler
+    app.kubernetes.io/part-of: datascience-platform
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: inference-engine-deployment # Vincula el autoescalado directo con tu Deployment
+  minReplicas: 2                     # Mantiene siempre un mínimo de 2 Pods para alta disponibilidad
+  maxReplicas: 10                    # Techo elástico máximo permitido para el microservicio
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 75       # Límite crítico: Dispara el autoescalado si la CPU supera el 75%

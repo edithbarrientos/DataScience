@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inference-engine-deployment
+  namespace: datascience-production
+  labels:
+    app.kubernetes.io/name: inference-engine
+    app.kubernetes.io/component: compute-core
+    app.kubernetes.io/part-of: datascience-platform
+spec:
+  replicas: 2                  
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0        
+  selector:
+    matchLabels:
+      app: inference-engine-core
+  template:
+    metadata:
+      labels:
+        app: inference-engine-core
+    spec:
+      containers:
+      - name: engine-container
+        image: inference-engine:v6.0.0 
+        imagePullPolicy: Never
+        
+        # 🪐 ARRANQUE MAESTRO EN PYTHON: Invocamos Uvicorn puro mapeado en la interfaz universal
+        command: ["python3", "-m", "uvicorn"]
+        args: ["src.main:app", "--host", "0.0.0.0", "--port", "9000"]
+        
+        ports:
+        - containerPort: 9000
+          protocol: TCP
+          
+        env:
+        - name: MODELS_DIR
+          value: "/mnt/models" 
+          
+        volumeMounts:
+        - name: model-mesh-volume
+          mountPath: "/mnt/models" 
+          
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "200m"
+          limits:
+            memory: "512Mi"    
+            cpu: "1000m"       
+            
+        livenessProbe:         
+          httpGet:
+            path: /health
+            port: 9000
+          initialDelaySeconds: 10
+          periodSeconds: 15
+        readinessProbe:        
+          httpGet:
+            path: /health
+            port: 9000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+
+      volumes:
+      - name: model-mesh-volume
+        persistentVolumeClaim:
+          claimName: datascience-model-mesh-pvc
